@@ -58,9 +58,9 @@ int main(int argc, char* argv[])
     size=atoll(argv[1]);
     stride=atoi(argv[2]);
     count=size/sizeof(data_t);
-    printf("size=%lu (%s ; %lu items of size %lu) stride=%d\n",
-           (unsigned long)size, pretty_size(size),
-           count, sizeof(data_t), stride);
+    printf("size=%ju (%s ; %ju items of size %ju) stride=%d\n",
+           (uintmax_t)size, pretty_size(size),
+           (uintmax_t)count, (uintmax_t)sizeof(data_t), stride);
 
     data=(data_t*) malloc(size);
 

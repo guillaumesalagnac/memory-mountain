@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <sys/time.h>
 
-#include "human.h"
+#include "pretty.h"
 
 // GS-2015-04-27-19:07 choosing  a small datatype (char,  short) seems
 // to yield poor results. (the bottleneck is not memory any more)
@@ -32,6 +33,8 @@ data_t run()
 
 void fill()
 {
+    srand(time(NULL));
+
     size_t i;
     for( i=0; i<count; i += stride )
     {
@@ -44,7 +47,11 @@ int main(int argc, char* argv[])
 {
     if(argc != 3)
     {
-        printf("wrong usage\n");
+        printf("usage: %s SIZE STRIDE\n",argv[0]);
+        printf("\n");
+        printf("Allocate a memory buffer and walk it, reporting read throughput.\n");
+        printf("  SIZE is the size of the buffer (in bytes).\n");
+        printf("  STRIDE is the distance between two successive reads (in 64bit items).\n");
         exit(1);
     }
 
@@ -52,20 +59,18 @@ int main(int argc, char* argv[])
     stride=atoi(argv[2]);
     count=size/sizeof(data_t);
     printf("size=%lu (%s ; %lu items of size %lu) stride=%d\n",
-           (unsigned long)size, h_size(size),
+           (unsigned long)size, pretty_size(size),
            count, sizeof(data_t), stride);
 
-    printf("malloc(");fflush(stdout);
     data=(data_t*) malloc(size);
-    printf(")");fflush(stdout);
 
-    srand(time(NULL));
+    // GS-2015-04-30-14:00 sometimes filling the buffer with non-zero data changes the
+    // results. But it is slow so we leave it out for now
+    /* printf("filling the buffer...");fflush(stdout); */
+    /* fill(); */
+    /* printf("OK\n");fflush(stdout); */
     
-    printf("fill(");fflush(stdout);
-    fill();
-    printf(")\n");fflush(stdout);
-    
-    float duration=0; // in microseconds
+    double duration=0; // in microseconds
     int repeats=1;
     while(1)
     {
@@ -85,9 +90,9 @@ int main(int argc, char* argv[])
 
         clock_t end=clock();
         
-        duration=(float)end - (float)begin ;
+        duration=(uintmax_t)end - (uintmax_t)begin ;
         
-        printf("%d repeats -> %fus\n",repeats,duration);
+        printf("%d repeats -> %s\n",repeats,pretty_time(duration,U_MICROSECONDS));
 
         if(duration > 100000) // only measurements above 1/10th second make sense
             break;
@@ -97,13 +102,13 @@ int main(int argc, char* argv[])
 
     duration = duration/repeats;
     
-    printf("individual duration = %fus\n",duration);
+    printf("=> one repeat -> %s\n",pretty_time(duration,U_MICROSECONDS));
 
     size_t quantity = (count/stride)*sizeof(data_t);// in bytes again
     
     printf("read %s in %s = %.1f MB/s\n",
-           h_size(quantity),
-           h_time(duration,U_MICROSECONDS),
+           pretty_size(quantity),
+           pretty_time(duration,U_MICROSECONDS),
            ((float)quantity)/duration // bytes per microseconds = megabytes per second
            );
     return 0;

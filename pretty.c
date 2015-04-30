@@ -1,14 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "human.h"
+#include "pretty.h"
 
+// metric units
+#define THOUSAND_BYTES 1000
 static char *size_units[]={ "B", "kB", "MB", "GB" };
 
+// IEC units
 // #define THOUSAND_BYTES 1024
-#define THOUSAND_BYTES 1000
+// static char *size_units[]={ "B", "kB", "MB", "GB" };
 
-char* h_size(size_t rawsize)
+char* pretty_size(size_t rawsize)
 {
     int unit=0;
     float size=rawsize;
@@ -32,7 +35,7 @@ char* h_size(size_t rawsize)
 
 static char* time_units[]={ "ns", "us", "ms", "s"};
 
-char * h_time(double duration,int input_unit)
+char * pretty_time(double duration,int input_unit)
 {
     int unit = input_unit;
     while(duration >1000)
@@ -41,8 +44,12 @@ char * h_time(double duration,int input_unit)
         unit++;
     }
 
-    char *ret=(char*)malloc(100);
-    sprintf(ret,"%.2f%s",duration,time_units[unit]);
+    char *ret=(char*)malloc(10); // room for NNNN.NN digits, 2-char unit, and trailing null
+
+    if( duration == (float)(int)duration)
+        sprintf(ret,"%d%s",(int)duration,time_units[unit]);
+    else
+        sprintf(ret,"%.2f%s",duration,time_units[unit]);
 
     return ret;
 }

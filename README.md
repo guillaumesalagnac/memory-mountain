@@ -4,17 +4,19 @@ The memory mountain
 This program is intended to  help reproduce the "memory mountain" plot
 which  illustrates  the  cover  of   the  book  "Computer  Systems:  A
 Programmer's Perspective" by Randal E. Bryant and David R. O'Hallaron.
+
+http://csapp.cs.cmu.edu/
+
 (search google for a .pdf version of the book)
 
 # Basic idea
 
-We're studying  the memory bandwidth  of various levels of  the memory
+We're measuring the memory bandwidth  of various levels of  the memory
 hierarchy, and  the impact of  the (spatial and temporal)  locality of
-accesses. For that, the program allocates  a flat data buffer and walk
+accesses. For that, the program allocates  a flat data buffer,  walks
 through it, then computes the actual read throughput.
 
 This is explained in detail in section 6.6.1 of the book, so go read it.
-
 
 # Usage
 
@@ -84,10 +86,16 @@ SIZE and STRIDE parameters.
 
 Change the values in the `for` loops to match your platform.
 
+You shoul  redirect the output of  `harness.py` in a file  so that you
+can plot them later:
+
+    $./harness.py > results.txt
+
 ## Interpreting the output
 
-For each  execution of `benchmark` we  print a line with  the SIZE and
-STRIDE parameters, followed by the reported throughput (in MBytes/s)
+For each execution of `benchmark` the script prints a line with the
+SIZE and STRIDE parameters, followed by the reported throughput (in
+MBytes/s)
 
 example:
 
@@ -102,7 +110,9 @@ example:
 The  script `plot.py`  loads  data  from a  text  file  and builds  an
 interactive 3D plot using `matplotlib`.
 
-You can turn around the mountai with your mouse.
+    $./plot.py results.txt
+
+You can turn around the mountain with your mouse.
 
 Notes:
 

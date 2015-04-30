@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
     {
         // GS-2015-04-27-19:13 volatile is required. (dont' know why
         // but it is) (might be CPU's fault)
-        volatile data_t dummy;
+        volatile data_t dummy=0;
             
         dummy+=run();//cache warm-up
         

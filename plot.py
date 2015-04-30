@@ -19,10 +19,14 @@ def pretty_speed(speed,pos):
     suffixes=['MB/s','GB/s']
     unit=0
     speed=int(speed)# initially in MB/s
-    while speed>1000: 
-        speed/=1000 # 1000 or 1024 ? cf pretty.c
+    while speed>1000:
+        speed/=1000. # 1000 or 1024 ? cf pretty.c
         unit+=1
-    return str(speed)+suffixes[unit]
+    # only keep the decimal part when there is one !
+    string=str(speed)
+    if string[-2:] == ".0":
+        string=string[:-2]
+    return string+suffixes[unit]
 
 def pretty_size(logsize,pos):
     """convert size to human-readable form.

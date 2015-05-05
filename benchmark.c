@@ -20,7 +20,7 @@ data_t *data; // data array itself. malloc'ed
 size_t count; // nb elements in the data array
 int stride;   // step size (in units of data_t)
 
-data_t run()
+data_t test()
 {
     data_t result=0;
     size_t i;
@@ -78,14 +78,14 @@ int main(int argc, char* argv[])
         // but it is) (might be CPU's fault)
         volatile data_t dummy=0;
             
-        dummy+=run();//cache warm-up
+        dummy+=test();//cache warm-up
         
         clock_t begin=clock();
         int r;
         
         for(r=0;r<repeats;r++)
         {
-            dummy+=run();
+            dummy+=test();
         }
 
         clock_t end=clock();

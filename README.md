@@ -32,7 +32,7 @@ dependencies:
 The program `benchmark.c`  runs the actual function from  the book and
 measures its execution time:
 
-    data_t run()
+    data_t test()
     {
         data_t result=0;
         size_t i;
@@ -62,8 +62,8 @@ Notes:
 ## Interpreting the output
 
 The program first  reports how it parsed  its command-line parameters.
-Then it calls `run()` enough times to measure a significant execution time.
-Once a satisfying measure is obtain, we compute the time required for one `run()`
+Then it calls `test()` enough times to measure a significant execution time.
+Once a satisfying measure is obtain, we compute the time required for one `test()`
 Last, we print out a summary  of the experiments: how much we did read,
 in how much time, and the corresponding throughput.
 

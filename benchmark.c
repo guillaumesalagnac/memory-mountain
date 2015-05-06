@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
         
         printf("%d repeats -> %s\n",repeats,pretty_time(duration,U_MICROSECONDS));
 
-        if(duration > 100000) // only measurements above 1/10th second make sense
+        if(duration > 1000)
             break;
 
         repeats = repeats*10;

@@ -55,9 +55,16 @@ Notes:
   `double` (native register size ?) gives interesting results. but YMMV
 
 - for  small  data sizes,  the  execution  time  is  too small  to  be
-  significant. So we repeat the call and measure the execution time of
+  significant (we measure time with `clock()`, which has a resolution
+  of microseconds). So we repeat the call and measure the execution
+  time of
   10 calls,  then 100  calls, and  so on, until  we get  a significant
-  measurement (above 1/10th of a second). 
+  measurement (above 1ms). But this is bad, because the processor is able
+  to detect the nested loop and accelerate it massively. A better
+  approach would be to use hardware counters to get nanosecond
+  accuracy, but then the program is not portable any more. (the original
+  program, by the book authors does that. It's interesting to compare the
+  two)
 
 ## Interpreting the output
 
@@ -84,17 +91,21 @@ in how much time, and the corresponding throughput.
 The script  `harness.py` invokes the `benchmark`  program with various
 SIZE and STRIDE parameters.
 
-Change the values in the `for` loops to match your platform.
+To reduce measurement noise, we run the program multiple times, and
+only keep the median value.
 
-You shoul  redirect the output of  `harness.py` in a file  so that you
+
+You should  redirect the output of  `harness.py` in a file  so that you
 can plot them later:
 
     $./harness.py > results.txt
 
+
+
 ## Interpreting the output
 
-For each execution of `benchmark` the script prints a line with the
-SIZE and STRIDE parameters, followed by the reported throughput (in
+For each series of runs the script prints a line with the
+SIZE and STRIDE parameters, followed by the median throughput (in
 MBytes/s)
 
 example:

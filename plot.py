@@ -64,12 +64,17 @@ fig=plt.figure()
 fig.subplots_adjust(left=0, right=1, bottom=0, top=1) # reduce whitespace margins around plot (I hope?)
 ax =fig.add_subplot(projection='3d')
 ax.invert_yaxis()
-ax.view_init(elev=15,azim=130)
 
 ax.plot_trisurf(x,y,z,cmap='rainbow',edgecolors='black')
 
+xlim=ax.get_xlim()
+if xlim[0] > xlim[1]:
+    ax.view_init(elev=15,azim=130)
+else:
+    ax.view_init(elev=15,azim=-50)
+        
 ax.set_xlabel('Stride (bytes)')
-ax.set_xlim(right=0)
+# ax.set_xlim(right=0) # seems to be useless nowadays ?!?
 
 ax.set_ylabel('Working set size')
 ax.yaxis.set_major_formatter(mpl.ticker.FuncFormatter(pretty_size))
